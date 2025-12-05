@@ -280,9 +280,25 @@ def send_telegram():
 
 # Generate links and subscription content
 async def generate_links(argo_domain):
-    meta_info = subprocess.run(['curl', '-s', 'https://speed.cloudflare.com/meta'], capture_output=True, text=True)
-    meta_info = meta_info.stdout.split('"')
-    ISP = f"{meta_info[25]}-{meta_info[17]}".replace(' ', '_').strip()
+    try:
+        # 获取 Cloudflare meta 信息
+        meta_info = subprocess.run(['curl', '-s', 'https://speed.cloudflare.com/meta'], capture_output=True, text=True)
+        
+        # 安全地解析 JSON 数据
+        try:
+            meta_data = json.loads(meta_info.stdout)
+            # 获取 ISP 和城市信息
+            isp = meta_data.get('asOrganization', 'UnknownISP')
+            city = meta_data.get('city', 'UnknownCity')
+            ISP = f"{isp}-{city}".replace(' ', '_').strip()
+        except (json.JSONDecodeError, KeyError):
+            # 如果 JSON 解析失败，使用默认值
+            print("Failed to parse Cloudflare meta data, using default values")
+            ISP = f"{NAME}-Default"
+            
+    except Exception as e:
+        print(f"Error getting location info: {e}")
+        ISP = f"{NAME}-Unknown"
 
     time.sleep(2)
     VMESS = {"v": "2", "ps": f"{NAME}-{ISP}", "add": CFIP, "port": CFPORT, "id": UUID, "aid": "0", "scy": "none", "net": "ws", "type": "none", "host": argo_domain, "path": "/vmess-argo?ed=2560", "tls": "tls", "sni": argo_domain, "alpn": "", "fp": "chrome"}
