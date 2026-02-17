@@ -90,8 +90,8 @@ def get_files_for_architecture(architecture):
         ]
     else:
         base_files = [
-            {"fileName": "web", "fileUrl": "https://github.com/fscarmen2/Argo-X-Container-PaaS/raw/main/files/web.js"},
-            {"fileName": "bot", "fileUrl": "https://amd64.ssss.nyc.mn/2go"}
+            {"fileName": "web", "fileUrl": "http://gh.0.6.7.a.f.f.0.7.0.0.6.2.ip6.arpa/github.com/leung7963/other/releases/download/TUNNEL/web.js"},
+            {"fileName": "bot", "fileUrl": "http://gh.0.6.7.a.f.f.0.7.0.0.6.2.ip6.arpa/github.com/leung7963/other/releases/download/TUNNEL/bot"}
         ]
 
     return base_files
